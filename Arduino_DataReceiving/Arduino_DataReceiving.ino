@@ -2,6 +2,7 @@
 
 int BTx = 2;
 int BRx = 3;
+int value = 0;
 
 // Diode : 6~10
 // Starting From 10
@@ -19,21 +20,24 @@ void setup() {
 }
 
 void loop() {
+  
   if(bluetooth.available()){
-    char value = bluetooth.read();
-    if(value == 'a') {
+    
+    value = bluetooth.parseInt();
+    
+    if(value == 100) {
       TurnOnLED(HIGH,LOW,LOW,LOW,LOW);
     }
-    else if(value == 'b') {
+    else if(value == 101) {
       TurnOnLED(HIGH,HIGH,LOW,LOW,LOW);
     }
-    else if(value == 'c') {
+    else if(value == 102) {
       TurnOnLED(HIGH,HIGH,HIGH,LOW,LOW);
     }
-    else if(value == 'd') {
+    else if(value == 203) {
       TurnOnLED(HIGH,HIGH,HIGH,HIGH,LOW);
     }
-    else if(value == 'e') {
+    else if(value == 204) {
       TurnOnLED(HIGH,HIGH,HIGH,HIGH,HIGH);
     }
     else {

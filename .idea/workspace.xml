@@ -27,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
   </component>
-  <component name="RunManager" selected="Python.GetStreaming">
+  <component name="RunManager" selected="Python.CheckSerialCommunication">
     <configuration name="CheckSerialCommunication" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -72,8 +72,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.GetStreaming" />
         <item itemvalue="Python.CheckSerialCommunication" />
+        <item itemvalue="Python.GetStreaming" />
       </list>
     </recent_temporary>
   </component>
@@ -107,21 +107,21 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1597753054174" />
-    <state width="995" height="201" key="GridCell.Tab.0.bottom" timestamp="1597815014968">
+    <state width="1457" height="201" key="GridCell.Tab.0.bottom" timestamp="1597994044495">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="995" height="201" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597815014968" />
-    <state width="995" height="201" key="GridCell.Tab.0.center" timestamp="1597815014968">
+    <state width="1457" height="201" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044495" />
+    <state width="1457" height="201" key="GridCell.Tab.0.center" timestamp="1597994044494">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="995" height="201" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597815014968" />
-    <state width="995" height="201" key="GridCell.Tab.0.left" timestamp="1597815014968">
+    <state width="1457" height="201" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044494" />
+    <state width="1457" height="201" key="GridCell.Tab.0.left" timestamp="1597994044494">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="995" height="201" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597815014968" />
-    <state width="995" height="201" key="GridCell.Tab.0.right" timestamp="1597815014968">
+    <state width="1457" height="201" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044494" />
+    <state width="1457" height="201" key="GridCell.Tab.0.right" timestamp="1597994044495">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="995" height="201" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597815014968" />
+    <state width="1457" height="201" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044495" />
   </component>
 </project>
