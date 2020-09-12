@@ -43,8 +43,6 @@ video = cv2.VideoCapture("output1.avi")
 
 # Make a Map
 
-regression = RF.RegressionAnalysis()
-regression.GetNumberOfData(5)
 count = 0
 distanceRobotFromObstacle = []
 addNewObstacleAtMap = 0
@@ -60,6 +58,7 @@ while(True):
     print(' count : ', count)
     print(' addNewObstacleAtMap : ', addNewObstacleAtMap)
     print(' numObstacle : ', numObstacle)
+    print(' obstacleUpdate : ', obstacleUpdate)
     print('======================= Parameters confirmed ======================')
 
     #initialize values
@@ -144,6 +143,8 @@ while(True):
     cxrForMap = []
     distanceForMap = []
 
+    # Check distance
+    #
     # cxl and cxr is pixel number for center of the obstacle.
     # therefore, the obstacle number should be same as number of cxl in cx_l
     #                           Stereo Image
@@ -179,6 +180,7 @@ while(True):
         for cxr in cx_r:
             if abs(cxr-cxl) < 100 and abs(cxr-cxl) > 0:
                 distance = int(abs(float(640*120/(cxr-cxl))))
+
                 distanceForMap.append(distance)
                 cxlForMap.append(cxl)
                 cxrForMap.append(cxr)
@@ -186,24 +188,6 @@ while(True):
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
                 cv2.putText(right_cont, str(distance), (cxr,cy_r[cx_r.index(cxr)]),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-
-                # When obstacle is exist, update the value of distance
-                if count is not 0 or addNewObstacleAtMap is not 0 :
-                    print('==== Obstacle update will be proceeded. ====')
-                    print('distanceForMap : ', distanceForMap)
-                    for obstacleParameter in obstacle:
-                        index = obstacle.index(obstacleParameter)
-                        obstacleDistance = obstacleParameter[2]
-                        if abs(obstacleDistance - distance) < 100 :
-                            print('the distance is updated.')
-                            obstacle[index][2]=distance
-                    print('==== check complete. ====')
-
-                # Update State
-                if numObstacle < len(distanceForMap) :
-                    count = 0
-                    addNewObstacleAtMap = 1
-                    obstacleUpdate = 0
 
     # obstacle detection
     #
@@ -232,6 +216,7 @@ while(True):
                     obstacle.append([center, obstacle_y, distance])
                     count = 1
                     numObstacle = len(obstacle)
+
         else :      # When new obstacle detected, add new one.
             for distance in distanceForMap:
                 if obstacleUpdate == 1:
@@ -243,7 +228,7 @@ while(True):
                     center = int((cxlForMap[index]+cxrForMap[index])/2)
                     obstacle_y = int(480-distance*480/5000)
 
-                    # Check obstacles
+                    # Check obstacles and add
                     for obstacleParameter in obstacle:
                         index=obstacle.index(obstacleParameter)
                         if abs(obstacleParameter[2]-distance) < 100 : # if the obstacle is origin
@@ -257,6 +242,47 @@ while(True):
 
                     count = 1
                     numObstacle = len(obstacle)
+
+    # When obstacle is exist, update the value of distance
+    print('==== Obstacle update will be proceeded. ====')
+    print('distanceForMap : ', distanceForMap)
+    if obstacle is not None and distanceForMap is not None:
+        for obstacleParameter in obstacle:
+            index = obstacle.index(obstacleParameter)
+            obstacleDistance = obstacleParameter[2]
+
+            for distance in distanceForMap:
+                if abs(obstacleDistance - distance) < 100:
+                    print('the distance is updated.')
+                    obstacle[index][2] = distance
+                else :
+                    if obstacleUpdate == 1:
+                        break
+                    print('new obstacle is detected.')
+                    print('new obstacle will be added at next step')
+                    count = 0
+                    addNewObstacleAtMap = 1
+                    obstacleUpdate = 0
+        print('==== check complete. ====')
+    else :
+        print('obstacle is None. Not update anything')
+        print('========== Cancel update ============')
+
+    # Set obstacle Object for filtering.
+    # for distance in distanceForMap:
+    #     index = distanceForMap.index(distance)
+    #     # First Frame
+    #     if frame == 1 :
+    #         obstacle1 = RF.RegressionAnalysis()
+    #         obstacle1.GetNumberOfData(5)
+    #     # Check the first obstacle is right
+    #     for obstacleIndex in obstacle:
+    #         indexObs = obstacle.index(obstacleIndex)
+    #         if obstacleIndex[2] == distance :
+
+
+
+
 
     print(' Check obstacles ')
     print('number of Obstacles : ', numObstacle)

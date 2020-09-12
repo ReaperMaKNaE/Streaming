@@ -34,7 +34,7 @@ class RegressionAnalysis:
             return 0
 
     def SaveData(self, data):
-        if self.dataArray < self.numData:
+        if len(self.dataArray) < self.numData:
             self.dataArray.append(data)
         else :
             self.dataArray.pop(0)
