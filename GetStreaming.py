@@ -1,59 +1,48 @@
 import cv2
 import numpy as np
+import urllib.request
 import serial
 
 # To start real time streaming in raspberryPi
 # mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090
 #                   -w /usr/local/share/mjpg_streamer/www/"
-cap = cv2.VideoCapture("http://192.168.5.101:8090/?action=stream")
+video = urllib.request.urlopen("http://192.168.0.18:8080/video_feed")
+total_bytes = b''
 
-arduino = serial.Serial(
-    port = 'COM6', baudrate=9600,
-)
+#arduino = serial.Serial(
+#    port = 'COM6', baudrate=9600,
+#
 
-while(cap.isOpened()):
-    ret, frame = cap.read()
-    origin = frame.copy()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 50, 150, apertureSize = 3)
-    lines = cv2.HoughLines(edges, 1, np.pi/180, 150)
-    comps = 0
-    if lines is not None:
-        for line in lines:
-            rho, theta = line[0]
-            a = np.cos(theta)
-            b = np.sin(theta)
-            x0 = a*rho
-            y0 = b*rho
-            x1 = int(x0 + 1000*(-b))
-            y1 = int(y0 + 1000*(a))
-            x2 = int(x0 - 1000*(-b))
-            y2 = int(y0 - 1000*(a))
-            comps = comps + 1
-            cv2.line(frame, (x1,y1), (x2,y2), (0,0,255), 2)
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+writer = cv2.VideoWriter('output1.avi', fourcc, 25.0, (1280,480))
 
-    if comps == 0:
-        arduino.write(b'a')
-    elif comps > 0 and comps <= 4:
-        arduino.write(b'b')
-    elif comps > 4 and comps <= 8:
-        arduino.write(b'c')
-    elif comps > 8 and comps <= 12:
-        arduino.write(b'd')
-    elif comps > 12 and comps <= 16:
-        arduino.write(b'e')
-    else:
-        arduino.write(b'k')
+while(True):
+    total_bytes += video.read(1024)
+    b = total_bytes.find(b'\xff\xd9') # JPEG END
+    if not b == -1:
+        a = total_bytes.find(b'\xff\xd8') # JPEG start
+        jpg = total_bytes[a:b+2] # actual image
+        total_bytes = total_bytes[b+2:] # other informations
 
-    if ret:
-        cv2.imshow('video',frame)
-        cv2.imshow('origin',origin)
+        #decode to colored image (another option is cv2.IMREAD_GRAYSCALE)
+        img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+        left = img[241:480, 1:640, :]
+        right = img[241:480, 641:1280, :]
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=100)
+
+        fgmask_left = fgbg.apply(left)
+        fgmask_right = fgbg.apply(right)
+
+        mixed = np.hstack([fgmask_left, fgmask_right])
+
+        cv2.imshow('Dual_image',img) # display image while receving data
+        #cv2.imshow('mixed', mixed)
+
+        writer.write(img)
+        #cv2.VideoWriter('example_mixed.avi', fourcc).write(mixed)
+        if cv2.waitKey(1)==27:
             break
 
-    else:
-        break
-
-cap.release()
+writer.release()
 cv2.destroyAllWindows()

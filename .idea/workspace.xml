@@ -27,8 +27,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
   </component>
-  <component name="RunManager" selected="Python.CheckSerialCommunication">
-    <configuration name="CheckSerialCommunication" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.DrawDepthMap">
+    <configuration name="DrawDepthMap" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -40,7 +40,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CheckSerialCommunication.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DrawDepthMap.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -70,10 +70,76 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Stereo1CGN_Viewer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Streaming" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Stereo1CGN_Viewer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="myCamCap" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Streaming" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/myCamCap.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="oCamTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Streaming" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/oCamTest.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.CheckSerialCommunication" />
+        <item itemvalue="Python.DrawDepthMap" />
         <item itemvalue="Python.GetStreaming" />
+        <item itemvalue="Python.oCamTest" />
+        <item itemvalue="Python.myCamCap" />
+        <item itemvalue="Python.Stereo1CGN_Viewer" />
       </list>
     </recent_temporary>
   </component>
@@ -103,25 +169,49 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1597753054174">
+    <state x="837" y="171" key="#Notifications" timestamp="1598246039249">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1597753054174" />
-    <state width="1457" height="201" key="GridCell.Tab.0.bottom" timestamp="1597994044495">
+    <state x="837" y="171" key="#Notifications/0.0.1920.1040@0.0.1920.1040" timestamp="1598246039249" />
+    <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1599573816390">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1457" height="201" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044495" />
-    <state width="1457" height="201" key="GridCell.Tab.0.center" timestamp="1597994044494">
+    <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1599573816390" />
+    <state width="1301" height="182" key="GridCell.Tab.0.bottom" timestamp="1599895919862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1457" height="201" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044494" />
-    <state width="1457" height="201" key="GridCell.Tab.0.left" timestamp="1597994044494">
+    <state width="1301" height="182" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599895919862" />
+    <state width="1301" height="182" key="GridCell.Tab.0.center" timestamp="1599895919862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1457" height="201" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044494" />
-    <state width="1457" height="201" key="GridCell.Tab.0.right" timestamp="1597994044495">
+    <state width="1301" height="182" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599895919862" />
+    <state width="1301" height="182" key="GridCell.Tab.0.left" timestamp="1599895919862">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1457" height="201" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1597994044495" />
+    <state width="1301" height="182" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599895919862" />
+    <state width="1301" height="182" key="GridCell.Tab.0.right" timestamp="1599895919862">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1301" height="182" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599895919862" />
+    <state width="1301" height="308" key="GridCell.Tab.1.bottom" timestamp="1599887514396">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1301" height="308" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599887514396" />
+    <state width="1301" height="308" key="GridCell.Tab.1.center" timestamp="1599887514395">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1301" height="308" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599887514395" />
+    <state width="1301" height="308" key="GridCell.Tab.1.left" timestamp="1599887514395">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1301" height="308" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599887514395" />
+    <state width="1301" height="308" key="GridCell.Tab.1.right" timestamp="1599887514395">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1301" height="308" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599887514395" />
+    <state x="50" y="118" width="965" height="697" key="dock-window-1" timestamp="1599891783079">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="50" y="118" width="965" height="697" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1599891783079" />
   </component>
 </project>
