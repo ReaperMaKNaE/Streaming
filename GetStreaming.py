@@ -14,7 +14,7 @@ total_bytes = b''
 #
 
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-writer = cv2.VideoWriter('output1.avi', fourcc, 25.0, (1280,480))
+writer = cv2.VideoWriter('output3.avi', fourcc, 25.0, (1280,480))
 
 while(True):
     total_bytes += video.read(1024)
@@ -29,12 +29,12 @@ while(True):
         left = img[241:480, 1:640, :]
         right = img[241:480, 641:1280, :]
 
-        fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=100)
+        #fgbg = cv2.createBackgroundSubtractorMOG2(varThreshold=100)
 
-        fgmask_left = fgbg.apply(left)
-        fgmask_right = fgbg.apply(right)
+        #fgmask_left = fgbg.apply(left)
+        #fgmask_right = fgbg.apply(right)
 
-        mixed = np.hstack([fgmask_left, fgmask_right])
+        #mixed = np.hstack([fgmask_left, fgmask_right])
 
         cv2.imshow('Dual_image',img) # display image while receving data
         #cv2.imshow('mixed', mixed)

@@ -31,7 +31,7 @@ from matplotlib import pyplot as plt
 # exposure : auto, 0x9a0901(absolute : 0x9a0902)
 
 # Call image
-video = cv2.VideoCapture("output1.avi")
+video = cv2.VideoCapture("output2.avi")
 
 # Save Images
 
@@ -53,6 +53,7 @@ frameNum = 0
 obstacleUpdate = 0
 robot_x_saved = 0
 robot_y_saved = 0
+updateDistance = 0
 
 while(True):
     print('======================== Check Parameters =========================')
@@ -61,6 +62,7 @@ while(True):
     print(' addNewObstacleAtMap : ', addNewObstacleAtMap)
     print(' numObstacle : ', numObstacle)
     print(' obstacleUpdate : ', obstacleUpdate)
+    print(' updateDistance : ', updateDistance)
     print('======================= Parameters confirmed ======================')
 
     #initialize values
@@ -204,17 +206,20 @@ while(True):
             obstacleDistance = obstacleParameter[2]
 
             for distance in distanceForMap:
-                if abs(obstacleDistance - distance) < 350:
+                if abs(obstacleDistance - distance) < 200:
                     print('the distance is updated.')
                     obstacle[index][2] = distance
-                else :
-                    if obstacleUpdate == 1:
-                        break
-                    print('new obstacle is detected.')
-                    print('new obstacle will be added at next step')
-                    count = 0
-                    addNewObstacleAtMap = 1
-                    obstacleUpdate = 0
+                    updateDistance = 1
+                    break
+
+            if updateDistance == 0 :
+                if obstacleUpdate == 1:
+                    break
+                print('new obstacle is detected.')
+                print('new obstacle will be added at next step')
+                count = 0
+                addNewObstacleAtMap = 1
+                obstacleUpdate = 0
         print('==== check complete. ====')
     else :
         print('obstacle is None. Not update anything')
@@ -262,7 +267,7 @@ while(True):
                     # Check obstacles and add
                     for obstacleParameter in obstacle:
                         index=obstacle.index(obstacleParameter)
-                        if abs(obstacleParameter[2]-distance) < 350 : # if the obstacle is origin
+                        if abs(obstacleParameter[2]-distance) < 200 : # if the obstacle is origin
                             print('This obstacle[',index,'] is origin, not update.')
                             continue
                         else :  # if the obstacle is new one
