@@ -46,7 +46,7 @@ video = cv2.VideoCapture("output2.avi")
 count = 0
 distanceRobotFromObstacle = []
 addNewObstacleAtMap = 0
-obstacle = [] # save location of obstacles
+obstacle = [] # save location of obstacles in Map
 numObstacle = 100 # Assume Maximum number of obstacles are 100
 robot = [320,480] # Save location of robot
 frameNum = 0
@@ -54,6 +54,7 @@ obstacleUpdate = 0
 robot_x_saved = 0
 robot_y_saved = 0
 updateDistance = 0
+obstacleForRobot = [] # save values of obstacles for Robot
 
 while(True):
     print('======================== Check Parameters =========================')
@@ -109,7 +110,7 @@ while(True):
     for cnt_left in contours_left:
         cv2.drawContours(left_cont, [cnt_left], 0, (255,0,0), 3) # contour with blue color
         # if contour area is over than 8000, draw green circle at centroid
-        if cv2.contourArea(cnt_left) > 9500:
+        if cv2.contourArea(cnt_left) > 10000:
             M_left = cv2.moments(cnt_left, False)
             cx_left = int(M_left['m10']/M_left['m00'])
             cy_left = int(M_left['m01']/M_left['m00'])
@@ -125,7 +126,7 @@ while(True):
     for cnt_right in contours_right:
         cv2.drawContours(right_cont, [cnt_right], 0, (255,0,0), 3) # contour with blue color
         # if contour area is over than 8000, draw green circle at centroid
-        if cv2.contourArea(cnt_right) > 9500:
+        if cv2.contourArea(cnt_right) > 10000:
             M_right = cv2.moments(cnt_right, False)
             cx_right = int(M_right['m10'] / M_right['m00'])
             cy_right = int(M_right['m01'] / M_right['m00'])
@@ -209,8 +210,6 @@ while(True):
                 if abs(obstacleDistance - distance) < 200:
                     print('the distance is updated.')
                     obstacle[index][2] = distance
-                    updateDistance = 1
-                    break
 
             if updateDistance == 0 :
                 if obstacleUpdate == 1:
@@ -267,7 +266,9 @@ while(True):
                     # Check obstacles and add
                     for obstacleParameter in obstacle:
                         index=obstacle.index(obstacleParameter)
-                        if abs(obstacleParameter[2]-distance) < 200 : # if the obstacle is origin
+                        obstacle_x = int(obstacleParameter[0])
+                        approximateValue_x = int((cx_l[index] + cx_r[index])/2)
+                        if abs(obstacleParameter[2]-distance) < 200: # if the obstacle is origin
                             print('This obstacle[',index,'] is origin, not update.')
                             continue
                         else :  # if the obstacle is new one
