@@ -1,14 +1,14 @@
 #
 # Copyright 2020 Joung Byung In, All Rights Reserved
 #
-# DrawDepthMap.py
+# DrawDepthMap_Ver2.py
 #
 # SKKU
 # School of Mechanical Engineering
 # School of Electromagnetic Engineering
 # Senior Student
 #
-# 2020.09.09 for ver 1.0
+# 2020.10.22 for ver 2.0
 #
 # NOTE :
 #       Draw map from the video
@@ -20,58 +20,44 @@
 
 import cv2
 import numpy as np
-import RegressionFilter as RF
 import math
-from matplotlib import pyplot as plt
-
-# oCamS-1CGN-U
-# White balance red component : 0x98090e
-# White balance blue component : 0x98090f
-# gain : 0x980913
-# exposure : auto, 0x9a0901(absolute : 0x9a0902)
 
 # Call image
 video = cv2.VideoCapture("output2.avi")
 
-# Save Images
-
-# fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-# originWriter = cv2.VideoWriter('origin.mp4', fourcc, 25.0, (1280,480))
-# threshWriter = cv2.VideoWriter('thresh.mp4', fourcc, 25.0, (1280,480))
-# contWriter = cv2.VideoWriter('cont.mp4', fourcc, 25.0, (1280,480))
-# distanceWriter = cv2.VideoWriter('distance.mp4', fourcc, 25.0, (1280,480))
-
 # Initialize values
-
-count = 0
-distanceRobotFromObstacle = []
-addNewObstacleAtMap = 0
-obstacle = [] # save location of obstacles in Map
+obstacle = [] # save location of obstacles and distance from the robot in each frame
 numObstacle = 100 # Assume Maximum number of obstacles are 100
 robot = [320,480] # Save location of robot
+addNewObstacle = 0
+obstacleUpdate = []
 frameNum = 0
-obstacleUpdate = 1
+velocity = 0
 robot_x_saved = 0
 robot_y_saved = 0
-updateDistance = 0
-obstacleForRobot = [] # save values of obstacles for Robot
+eulerAngle = []
+count = 0
+addNewObstacleAtMap = 0
 
 while(True):
     print('======================== Check Parameters =========================')
     print(' frameNum : ', frameNum)
-    print(' count : ', count)
-    print(' addNewObstacleAtMap : ', addNewObstacleAtMap)
+    print(' obstacle : ', obstacle)
+    print(' robot : ', robot)
+    print(' addNewObstacle : ', addNewObstacle)
     print(' numObstacle : ', numObstacle)
     print(' obstacleUpdate : ', obstacleUpdate)
-    print(' updateDistance : ', updateDistance)
+    print(' velocity : ', velocity)
+    print(' eulerAngle : ', eulerAngle)
+    print(' count : ', count)
+    print(' addNewObstacleAtMap : ', addNewObstacleAtMap)
     print('======================= Parameters confirmed ======================')
 
     #initialize values
     robot_x = 0
     robot_y = 0
-    map = np.zeros((500, 640, 3), np.uint8)
+    map = np.zeros((500, 800, 3), np.uint8)
 
-    # Take ret and frame. if video format is confirmed, ret will be 1.
     ret, frame = video.read()
 
     # As same as ret is 0
@@ -106,7 +92,7 @@ while(True):
     cx_r=[]
     cy_r=[]
 
-    # Draw contrours
+    # Draw contours
     for cnt_left in contours_left:
         cv2.drawContours(left_cont, [cnt_left], 0, (255,0,0), 3) # contour with blue color
         # if contour area is over than 8000, draw green circle at centroid
@@ -186,47 +172,147 @@ while(True):
     # count                 :      0 -> 1                   0                     1
     # addNewObstacleAtMap   :      0 -> 1                   1                     1
     # obstacleUpdate        :      0 -> 1                 1->0                    1
+
     for cxl in cx_l:
         for cxr in cx_r:
-            if abs(cxr-cxl) < 100 and abs(cxr-cxl) > 0:
-                distance = int(abs(float(640*120/(cxr-cxl))))
+            if cxr < 550 and cxl < 550:
+                if abs(cxr-cxl) < 100 and abs(cxr-cxl) > 0:
+                    distance = int(abs(float(640*120/(cxr-cxl))))
 
-                distanceForMap.append(distance)
-                cxlForMap.append(cxl)
-                cxrForMap.append(cxr)
-                cv2.putText(left_cont, str(distance), (cxl,cy_l[cx_l.index(cxl)]),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-                cv2.putText(right_cont, str(distance), (cxr,cy_r[cx_r.index(cxr)]),
-                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                    distanceForMap.append(distance)
+                    cxlForMap.append(cxl)
+                    cxrForMap.append(cxr)
+                    cv2.putText(left_cont, str(distance), (cxl,cy_l[cx_l.index(cxl)]),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
+                    cv2.putText(right_cont, str(distance), (cxr,cy_r[cx_r.index(cxr)]),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
 
     print(' === Check distanceForMap before obstacle check === ')
     print('distanceForMap : ', distanceForMap)
     print('         === Finish check distanceForMap === ')
 
-    # When obstacle is exist, update the value of distance
+    # before update, we should check which one will be updated or not.
+    # let me call it as poplist.
+    popList = []
+    if distanceForMap is not None:
+        for distance in distanceForMap:
+            index = distanceForMap.index(distance)
+            popList.append([cx_l[index], cx_r[index], distanceForMap[index]])
+
+    # At this time, the distanceForMap is ...
+    #
+    # obstacle = [cx1, cy1, distance1_Not_Updated], [cx2, cy2, distance2_Not_Updated], ...
+    # distanceForMap = [distance1, distance2, ... ]
+    # Therefore to make them as one, we shoudl consider them as index.
+    #
+    # Therefore, the meaning of the values could be
+    #
+    # "There are obstacles in the map.(or one)
+    #  The detected one has cx{%d}.format(i) and cy{%d}.format(i) location in the map
+    #  and the distance from the robot is distance[i]
+    #
+    # From this values, you can find the locations of robot and obstacles.
+
+    # When obstacle is exist, update the value of distance.
+    #
+    # To update the value, we should check the velocity and the rotate angle of robot.
+    # Let assume the rotate angle of robot is
+    # eulerAngle = [rotateAngle, tiltAngle]
+    #
+    # rotateAngle means how the robot rotates based on map
+    # tileAngle means how the inside parts of the robot tilt
+    #
+
+    velocity = 0        # Get velocity value from the raspberryPI
+    rotateAngle = 0     # Get rotateAngle from the raspberryPI
+    tiltAngle = 0       # Get tiltAngle from the raspberryPI
+
+    eulerAngle = [rotateAngle, tiltAngle]
+
     print('==== Obstacle update will be proceeded. ====')
     if obstacle is not None and distanceForMap is not None:
+        # Obstacles are detected in this frame.
         for obstacleParameter in obstacle:
             index = obstacle.index(obstacleParameter)
             obstacleDistance = obstacleParameter[2]
 
             for distance in distanceForMap:
+                # check distance and location of obstacle
+                # if location of obstacle is similar to before, update.
                 if abs(obstacleDistance - distance) < 250:
-                    print('the distance is updated.')
-                    obstacle[index][2] = distance
+                    if (tiltAngle - int(obstacleParameter[0]/320*100)) < 10:
+                        obstacle[index][2] = distance
+                        obstacleUpdate[index] = 1
 
-            if updateDistance == 0 :
-                if obstacleUpdate == 1:
-                    continue
-                print('new obstacle is detected.')
-                print('new obstacle will be added at next step')
-                count = 0
-                addNewObstacleAtMap = 1
-                obstacleUpdate = 0
+                        #
+                        # before pop, check the distance relationship
+                        # between pixel map and distance map
+                        #
+                        '''
+                        xDiscrepancy = abs(robot_x_saved - obstacle[index][0])
+                        yDiscrepancy = abs(robot_y_saved - obstacle[index][1])
+                        xDiscrepancySqua = xDiscrepancy * xDiscrepancy
+                        yDisCrepancySqua = yDiscrepancy * yDiscrepancy
+                        print('xDiscrepancy and yDiscrepancy : ', xDiscrepancy, yDiscrepancy)
+                        print('square value of each discrepancy : ',
+                              xDiscrepancySqua, yDisCrepancySqua)
+                        print('sum of them : ', xDiscrepancySqua + yDisCrepancySqua)
+
+                        distanceInPixelMap = int(math.sqrt(xDiscrepancySqua + yDisCrepancySqua))
+                        print('distance : ', distance, ' distanceInPixelMap : ', distanceInPixelMap)
+                        '''
+                        # You can find the distance relationship between two is
+                        # 2560/262 = (distance / distacneInPixelMap)
+
+                        # pop which is updated.
+                        for distanceValue in popList:
+                            if distanceValue[2] == distance:
+                                popListIndex = popList.index(distanceValue)
+                                popList.pop(popListIndex)
+                        print('the distance is updated.')
+
+        # Update Obstacles which are not detected
+        countIndexForObstacleUpdate = 0
+        for updateDataOfObstacle in obstacleUpdate:
+            if updateDataOfObstacle == 0:
+                # Check the distance relationship between pixel map and distance map
+                xDiscrepancy = abs(robot_x_saved - obstacle[countIndexForObstacleUpdate][0])
+                yDiscrepancy = abs(robot_y_saved - obstacle[countIndexForObstacleUpdate][1])
+                xDiscrepancySqua = xDiscrepancy * xDiscrepancy
+                yDiscrepancySqua = yDiscrepancy * yDiscrepancy
+                distance = int(math.sqrt(xDiscrepancySqua+yDiscrepancySqua)*2560/262)
+                obstacle[countIndexForObstacleUpdate][2] = distance
+                obstacleUpdate[countIndexForObstacleUpdate] = 1
+                #check data values
+                '''
+                print('xDiscrepancy , yDiscrepancy : ', xDiscrepancy, yDiscrepancy)
+                print('xDiscrepancySqua , yDiscrepancySqua : ', xDiscrepancySqua, yDiscrepancySqua)
+                print('sum of them : ', xDiscrepancySqua + yDiscrepancySqua)
+                print('square root of sum : ', math.sqrt(xDiscrepancySqua + yDiscrepancySqua))
+                print('distance : ', distance)
+                '''
+            countIndexForObstacleUpdate += 1
+
+        # Check new obstacles
+        # The addition of obstacles is next step.
+        # This is just for check update new obstacle.
+        # First, check all value of obstacle is updated.
+        # popList is not empty, then there should be new obstacles.
+        if popList is None:
+            print('new obstacle is detected.')
+            print('popList(the new one) is : ', popList)
+            print('new obstacle will be added at next step')
+            count = 0
+            addNewObstacleAtMap = 1
         print('==== check complete. ====')
     else :
         print('obstacle is None. Not update anything')
         print('========== Cancel update ============')
+
+    print(' Check obstacles before add new one')
+    print('number of Obstacles : ', numObstacle)
+    print('obstacle : ', obstacle)
+    print(' Draw Map ')
 
     # obstacle detection
     #
@@ -255,33 +341,19 @@ while(True):
                     obstacle.append([center, obstacle_y, distance])
                     count = 1
                     numObstacle = len(obstacle)
-
         else :      # When new obstacle detected, add new one.
-            for distance in distanceForMap:
-                if obstacleUpdate == 1:
-                    break
-                if distance < 5000:
+            for obstacleParameter in popList:
+                if obstacleParameter[2] < 5000:
                     print('===== New Obstacle is detected =====')
-                    index = distanceForMap.index(distance)
-                    print('detected obstacle is : ', index)
-                    center = int((cxlForMap[index]+cxrForMap[index])/2)
-                    obstacle_y = int(robot_y_saved-distance*480/5000)
-
-                    # Check obstacles and add
-                    for obstacleParameter in obstacle:
-                        if numObstacle < len(obstacle):
-                            break
-                        index=obstacle.index(obstacleParameter)
-                        obstacle_x = int(obstacleParameter[0])
-                        approximateValue_x = int((cx_l[index] + cx_r[index])/2)
-                        if abs(obstacleParameter[2]-distance) < 250: # if the obstacle is origin
-                            print('This obstacle[',index,'] is origin, not update.')
-                            continue
-                        else :  # if the obstacle is new one
-                            print('=====new obstacle[', index,'] is detected.=====')
-                            obstacle.append([center, obstacle_y, distance])
-                            print('===== new obstacle[',index,'] is added. =====')
-                            obstacleUpdate = 1
+                    index = popList.index(obstacleParameter)
+                    print('detected new obstacle is : ', obstacleParameter)
+                    # center is value of (cx_l+cx_r)/2 in integer type
+                    # obstacle_y means y location of obstacle
+                    center = int((obstacleParameter[0] + obstacleParameter[1]) / 2)
+                    obstacle_y = int(robot_y_saved - obstacleParameter[2] * 480 / 5000)
+                    print('=====new obstacle[', obstacleParameter, '] is detected.=====')
+                    obstacle.append([center, obstacle_y, obstacleParameter[2]])
+                    print('===== new obstacle[', obstacleParameter, '] is added. =====')
 
                     count = 1
                     numObstacle = len(obstacle)
@@ -303,20 +375,27 @@ while(True):
     print('obstacle : ', obstacle)
     print(' Draw Map ')
 
-    # Draw robot's location - Localization
+    # append obstacles to draw Map
+    obstacleListForMap = []
 
+    for obstacleParameter in obstacle:
+        for distance in distanceForMap:
+            if obstacleParameter[2] == distance:
+                obstacleListForMap.append(obstacleParameter)
+
+    # Draw robot's location - Localization
     for distance in distanceForMap:
         index = distanceForMap.index(distance)
         angle = int((cxlForMap[index]+cxrForMap[index])/2) - 320
         x_direction = angle
         y_direction = int(distance * 480 / 5000)
 
-        for obstacleTitle in obstacle:
+        for obstacleTitle in obstacleListForMap:
             if obstacleTitle[2] == distance :
                 maxIndex = len(distanceForMap)
-                index = obstacle.index(obstacleTitle)
-                robot_x += (obstacle[index][0] - x_direction) / maxIndex
-                robot_y += (obstacle[index][1] + y_direction) / maxIndex
+                index = obstacleListForMap.index(obstacleTitle)
+                robot_x += (obstacleListForMap[index][0] - x_direction) / maxIndex
+                robot_y += (obstacleListForMap[index][1] + y_direction) / maxIndex
                 print('angle : ', angle)
                 print('x_direction : ', x_direction)
                 print('y_direction : ', y_direction)
@@ -334,6 +413,7 @@ while(True):
         index = obstacle.index(obstacleIndex)
         cv2.circle(map, (obstacle[index][0],obstacle[index][1]), 5, (0,255,0),-1)
 
+    obstacleUpdate = np.zeros(shape=(len(obstacle),), dtype=np.int8)
 
     cv2.imshow('map', map)
 
@@ -358,8 +438,9 @@ while(True):
     # contWriter.write(contImage)
     # distanceWriter.write(distanceImage)
 
-    if cv2.waitKey(0) :
-        continue
+    # if you wanna no stop here, change it cv2.waitKey(1)==27
+    if cv2.waitKey(0)==27 :
+        break
 
 print('frameNum : ', frameNum)
 
@@ -371,5 +452,6 @@ video.release()
 # threshWriter.release()
 # contWriter.release()
 # distanceWriter.release()
+
 cv2.waitKey(0)
 cv2.destroyAllWindows()

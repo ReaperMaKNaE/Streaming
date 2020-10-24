@@ -15,19 +15,23 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="ADD_SUFFIX_TO_CHERRY_PICKS_OF_PUBLISHED_COMMITS" value="false" />
+    <option name="PREVIEW_PUSH_ON_COMMIT_AND_PUSH" value="false" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="WARN_ABOUT_CRLF" value="false" />
+    <option name="WARN_ABOUT_DETACHED_HEAD" value="false" />
   </component>
   <component name="ProjectId" id="1gGu1vj7IOjdi6lRwEXumquNrcy" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
-  <component name="RunManager" selected="Python.DrawDepthMap">
+  <component name="RunManager" selected="Python.DrawDepthMap_Ver2">
     <configuration name="DrawDepthMap" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -49,6 +53,27 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="DrawDepthMap_Ver2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Streaming" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DrawDepthMap_Ver2.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="GetStreaming" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -62,27 +87,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GetStreaming.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="Stereo1CGN_Viewer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="Streaming" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Stereo1CGN_Viewer.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -135,26 +139,15 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.DrawDepthMap_Ver2" />
         <item itemvalue="Python.DrawDepthMap" />
         <item itemvalue="Python.GetStreaming" />
         <item itemvalue="Python.oCamTest" />
         <item itemvalue="Python.myCamCap" />
-        <item itemvalue="Python.Stereo1CGN_Viewer" />
       </list>
     </recent_temporary>
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -177,22 +170,26 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="978" y="347" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1599573816390" />
-    <state width="1311" height="290" key="GridCell.Tab.0.bottom" timestamp="1599997043025">
+    <state x="603" y="266" key="FileChooserDialogImpl" timestamp="1602666715237">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="290" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1599997043025" />
-    <state width="1311" height="290" key="GridCell.Tab.0.center" timestamp="1599997043025">
+    <state x="603" y="266" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602666715237" />
+    <state width="1311" height="289" key="GridCell.Tab.0.bottom" timestamp="1603561401287">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="290" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1599997043025" />
-    <state width="1311" height="290" key="GridCell.Tab.0.left" timestamp="1599997043025">
+    <state width="1311" height="289" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1603561401287" />
+    <state width="1311" height="289" key="GridCell.Tab.0.center" timestamp="1603561401287">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="290" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1599997043025" />
-    <state width="1311" height="290" key="GridCell.Tab.0.right" timestamp="1599997043025">
+    <state width="1311" height="289" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1603561401287" />
+    <state width="1311" height="289" key="GridCell.Tab.0.left" timestamp="1603561401287">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="290" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599997043025" />
+    <state width="1311" height="289" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1603561401287" />
+    <state width="1311" height="289" key="GridCell.Tab.0.right" timestamp="1603561401287">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1311" height="289" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1603561401287" />
     <state width="1301" height="308" key="GridCell.Tab.1.bottom" timestamp="1599887514396">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -209,9 +206,13 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state width="1301" height="308" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1599887514395" />
-    <state x="50" y="118" width="965" height="697" key="dock-window-1" timestamp="1599988945564">
+    <state x="534" y="165" key="SettingsEditor" timestamp="1600243453220">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="50" y="118" width="965" height="697" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1599988945564" />
+    <state x="534" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1600243453220" />
+    <state x="743" y="279" width="948" height="610" key="dock-window-1" timestamp="1603560169182">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="743" y="279" width="948" height="610" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1603560169182" />
   </component>
 </project>
