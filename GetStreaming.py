@@ -6,10 +6,14 @@ import serial
 # To start real time streaming in raspberryPi
 # mjpg_streamer -i "input_raspicam.so -vf" -o "output_http.so -p 8090
 #                   -w /usr/local/share/mjpg_streamer/www/"
-video = urllib.request.urlopen("http://192.168.0.18:8080/video_feed")
+video = urllib.request.urlopen("http://192.168.137.193:8080/video_feed")
 total_bytes = b''
 
-#arduino = serial.Serial(
+#bytes_angles = urllib.request.urlopen("http://192.168.137.193:8080/angles")
+
+totalAngleBytes = b''
+
+# arduino = serial.Serial(
 #    port = 'COM6', baudrate=9600,
 #
 
@@ -19,6 +23,8 @@ writer = cv2.VideoWriter('output3.avi', fourcc, 25.0, (1280,480))
 while(True):
     total_bytes += video.read(1024)
     b = total_bytes.find(b'\xff\xd9') # JPEG END
+    #totalAngleBytes += bytes_angles.read(1024)
+
     if not b == -1:
         a = total_bytes.find(b'\xff\xd8') # JPEG start
         jpg = total_bytes[a:b+2] # actual image
@@ -41,6 +47,19 @@ while(True):
 
         writer.write(img)
         #cv2.VideoWriter('example_mixed.avi', fourcc).write(mixed)
+        angle_start = total_bytes.find(b'\x42\x4D\xF6\x04\x00\x00')
+        roll = int.from_bytes(total_bytes[angle_start+6:angle_start+8], "big")
+        pitch = int.from_bytes(total_bytes[angle_start+8:angle_start+10], "big")
+        yaw = int.from_bytes(total_bytes[angle_start+10:angle_start+12], "big")
+
+        AngleInBytes = [roll, pitch, yaw]
+        '''
+        bytes_angle_start = totalAngleBytes.find(b'\x00\xd9')
+        bytes_angle_end = totalAngleBytes.find(b'\xfa\xd8')
+        AngleInBytes = totalAngleBytes[bytes_angle_start+2:bytes_angle_end]
+        '''
+        print('AngleInBytes : ', AngleInBytes)
+
         if cv2.waitKey(1)==27:
             break
 

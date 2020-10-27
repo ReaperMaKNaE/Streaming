@@ -12,37 +12,44 @@ SoftwareSerial bluetooth(2,3);
 void setup() {
   Serial.begin(9600);
   bluetooth.begin(9600);
+  // The pins which allow PWM is 5, 6, 9, 10, 11
+  pinMode(5, OUTPUT);
   pinMode(6, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(8, OUTPUT);
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
+  // Always 5V pin
+  pinMode(8, OUTPUT);
+  digitalWrite(8,HIGH);
 }
 
-void loop() {
-  
+void loop() {  
   if(bluetooth.available()){
     
     value = bluetooth.parseInt();
+    bluetooth.write(value);
+    analogWrite(5, 0);
+    analogWrite(6, value);
+    analogWrite(9, 0);
+    analogWrite(10, value);
     
+    /*
     if(value == 100) {
-      TurnOnLED(HIGH,LOW,LOW,LOW,LOW);
     }
     else if(value == 101) {
-      TurnOnLED(HIGH,HIGH,LOW,LOW,LOW);
     }
     else if(value == 102) {
-      TurnOnLED(HIGH,HIGH,HIGH,LOW,LOW);
     }
     else if(value == 203) {
-      TurnOnLED(HIGH,HIGH,HIGH,HIGH,LOW);
     }
     else if(value == 204) {
-      TurnOnLED(HIGH,HIGH,HIGH,HIGH,HIGH);
     }
     else {
-      TurnOnLED(LOW,LOW,LOW,LOW,LOW);
+      analogWrite(5, LOW);
+      analogWrite(6, LOW);
+      analogWrite(9, LOW);
+      analogWrite(10, LOW);
     }
+    */
   }
 }
 
