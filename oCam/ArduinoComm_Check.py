@@ -14,11 +14,6 @@ value5 = 100
 i = 0
 
 while True:
-    if i < 255:
-        i += 10
-    else :
-        i = 0
-
     #arduino.write(bytes(str(i), "ascii"))
     #time.sleep(1)
 
