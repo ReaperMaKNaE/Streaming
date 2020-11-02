@@ -22,6 +22,8 @@ import cv2
 import numpy as np
 import math
 
+PI = 3.141592
+
 # Call image
 video = cv2.VideoCapture("output2.avi")
 
@@ -35,7 +37,9 @@ frameNum = 0
 velocity = 0
 robot_x_saved = 0
 robot_y_saved = 0
-eulerAngle = []
+previous_robot_x = 0
+previous_robot_y = 0
+eulerAngle = [0, 0, 0]
 count = 0
 addNewObstacleAtMap = 0
 
@@ -76,8 +80,8 @@ while(True):
     right_gray = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
 
     # Threshold is 20, maximum binary value is 255.
-    left_thresh_binary = cv2.threshold(left_gray, 19, 255, cv2.THRESH_BINARY)[1]
-    right_thresh_binary = cv2.threshold(right_gray, 19, 255, cv2.THRESH_BINARY)[1]
+    left_thresh_binary = cv2.threshold(left_gray, 20, 255, cv2.THRESH_BINARY)[1]
+    right_thresh_binary = cv2.threshold(right_gray,20, 255, cv2.THRESH_BINARY)[1]
 
     # remove boundary of image to prevent wrong detection
     left_thresh = 255 - left_thresh_binary
@@ -176,8 +180,8 @@ while(True):
     for cxl in cx_l:
         for cxr in cx_r:
             if cxr < 550 and cxl < 550:
-                if abs(cxr-cxl) < 100 and abs(cxr-cxl) > 0:
-                    distance = int(abs(float(640*120/(cxr-cxl))))
+                if abs(cxr-cxl) < 50 and abs(cxr-cxl) > 0:
+                    distance = int(abs(float(360*120/(cxr-cxl))))
 
                     distanceForMap.append(distance)
                     cxlForMap.append(cxl)
@@ -217,17 +221,18 @@ while(True):
     #
     # To update the value, we should check the velocity and the rotate angle of robot.
     # Let assume the rotate angle of robot is
-    # eulerAngle = [rotateAngle, tiltAngle]
+    # eulerAngle = [roll, pitch, yaw]
     #
     # rotateAngle means how the robot rotates based on map
     # tileAngle means how the inside parts of the robot tilt
     #
 
     velocity = 0        # Get velocity value from the raspberryPI
-    rotateAngle = 0     # Get rotateAngle from the raspberryPI
-    tiltAngle = 0       # Get tiltAngle from the raspberryPI
 
-    eulerAngle = [rotateAngle, tiltAngle]
+
+    tiltAngle = 0
+    rollAngle = 0
+    eulerAngle = [0,0, 0]
 
     print('==== Obstacle update will be proceeded. ====')
     if obstacle is not None and distanceForMap is not None:
@@ -239,7 +244,7 @@ while(True):
             for distance in distanceForMap:
                 # check distance and location of obstacle
                 # if location of obstacle is similar to before, update.
-                if abs(obstacleDistance - distance) < 250:
+                if abs(obstacleDistance - distance) < 200:
                     if (tiltAngle - int(obstacleParameter[0]/320*100)) < 10:
                         obstacle[index][2] = distance
                         obstacleUpdate[index] = 1
@@ -280,7 +285,7 @@ while(True):
                 yDiscrepancy = abs(robot_y_saved - obstacle[countIndexForObstacleUpdate][1])
                 xDiscrepancySqua = xDiscrepancy * xDiscrepancy
                 yDiscrepancySqua = yDiscrepancy * yDiscrepancy
-                distance = int(math.sqrt(xDiscrepancySqua+yDiscrepancySqua)*2560/262)
+                distance = int(math.sqrt(xDiscrepancySqua+yDiscrepancySqua)*1280/262)
                 obstacle[countIndexForObstacleUpdate][2] = distance
                 obstacleUpdate[countIndexForObstacleUpdate] = 1
                 #check data values
@@ -376,34 +381,45 @@ while(True):
     print(' Draw Map ')
 
     # append obstacles to draw Map
-    obstacleListForMap = []
 
-    for obstacleParameter in obstacle:
+    if len(distanceForMap) != 0:
+        obstacleListForMap = []
+
+        for obstacleParameter in obstacle:
+            for distance in distanceForMap:
+                if obstacleParameter[2] == distance:
+                    obstacleListForMap.append(obstacleParameter)
+
+        # Draw robot's location - Localization
         for distance in distanceForMap:
-            if obstacleParameter[2] == distance:
-                obstacleListForMap.append(obstacleParameter)
+            index = distanceForMap.index(distance)
+            angle = int((cxlForMap[index]+cxrForMap[index])/2) - 320
+            x_direction = angle
+            y_direction = int(distance * 480 / 5000)
 
-    # Draw robot's location - Localization
-    for distance in distanceForMap:
-        index = distanceForMap.index(distance)
-        angle = int((cxlForMap[index]+cxrForMap[index])/2) - 320
-        x_direction = angle
-        y_direction = int(distance * 480 / 5000)
+            for obstacleTitle in obstacleListForMap:
+                if obstacleTitle[2] == distance :
+                    maxIndex = len(distanceForMap)
+                    index = obstacleListForMap.index(obstacleTitle)
+                    robot_x += (obstacleListForMap[index][0] - x_direction) / maxIndex
+                    robot_y += (obstacleListForMap[index][1] + y_direction) / maxIndex
+                    print('angle : ', angle)
+                    print('x_direction : ', x_direction)
+                    print('y_direction : ', y_direction)
+                else :
+                    continue
 
-        for obstacleTitle in obstacleListForMap:
-            if obstacleTitle[2] == distance :
-                maxIndex = len(distanceForMap)
-                index = obstacleListForMap.index(obstacleTitle)
-                robot_x += (obstacleListForMap[index][0] - x_direction) / maxIndex
-                robot_y += (obstacleListForMap[index][1] + y_direction) / maxIndex
-                print('angle : ', angle)
-                print('x_direction : ', x_direction)
-                print('y_direction : ', y_direction)
-            else :
-                continue
-
-    robot_x_saved = robot_x
-    robot_y_saved = robot_y
+        robot_x_saved = robot_x
+        robot_y_saved = robot_y
+        previous_robot_x = robot_x_saved
+        previous_robot_y = robot_y_saved
+    else:
+        robot_x_saved = previous_robot_x
+        robot_y_saved = previous_robot_y
+        robot_x_saved += int(math.sin(tiltAngle*PI/180)*velocity*262/2560)
+        robot_y_saved -= int(math.cos(tiltAngle*PI/180)*velocity*262/2560)
+        previous_robot_x = robot_x_saved
+        previous_robot_y = robot_y_saved
 
     # Display the location of robot and obstacle
     print('robot x : ', robot_x_saved)

@@ -31,7 +31,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
-  <component name="RunManager" selected="Python.ArduinoComm_Check">
+  <component name="RunManager" selected="Python.DrawDepthMap_Ver2">
     <configuration name="ArduinoComm_Check" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -116,7 +116,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="oCamTest" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="check" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Streaming" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -124,11 +124,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/oCam" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/oCamTest.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/oCam/check.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -139,11 +139,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.ArduinoComm_Check" />
-        <item itemvalue="Python.GetStreaming" />
         <item itemvalue="Python.DrawDepthMap_Ver2" />
+        <item itemvalue="Python.GetStreaming" />
+        <item itemvalue="Python.check" />
+        <item itemvalue="Python.ArduinoComm_Check" />
         <item itemvalue="Python.DrawDepthMap" />
-        <item itemvalue="Python.oCamTest" />
       </list>
     </recent_temporary>
   </component>
@@ -174,22 +174,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="603" y="266" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1602666715237" />
-    <state width="1311" height="223" key="GridCell.Tab.0.bottom" timestamp="1603898699970">
+    <state width="1382" height="289" key="GridCell.Tab.0.bottom" timestamp="1604305233550">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="223" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1603898699970" />
-    <state width="1311" height="223" key="GridCell.Tab.0.center" timestamp="1603898699970">
+    <state width="1382" height="289" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1604305233550" />
+    <state width="1382" height="289" key="GridCell.Tab.0.center" timestamp="1604305233549">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="223" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1603898699970" />
-    <state width="1311" height="223" key="GridCell.Tab.0.left" timestamp="1603898699969">
+    <state width="1382" height="289" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1604305233549" />
+    <state width="1382" height="289" key="GridCell.Tab.0.left" timestamp="1604305233548">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="223" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1603898699969" />
-    <state width="1311" height="223" key="GridCell.Tab.0.right" timestamp="1603898699970">
+    <state width="1382" height="289" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1604305233548" />
+    <state width="1382" height="289" key="GridCell.Tab.0.right" timestamp="1604305233549">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1311" height="223" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1603898699970" />
+    <state width="1382" height="289" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1604305233549" />
     <state width="1301" height="308" key="GridCell.Tab.1.bottom" timestamp="1599887514396">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -210,9 +210,13 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="534" y="165" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1600243453220" />
-    <state x="743" y="279" width="948" height="610" key="dock-window-1" timestamp="1603560169182">
+    <state x="972" y="33" width="920" height="1000" key="dock-window-1" timestamp="1604232770646">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="743" y="279" width="948" height="610" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1603560169182" />
+    <state x="972" y="33" width="920" height="1000" key="dock-window-1/0.0.1920.1040@0.0.1920.1040" timestamp="1604232770646" />
+    <state x="1139" y="131" width="586" height="804" key="find.popup" timestamp="1604233374395">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1139" y="131" width="586" height="804" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1604233374395" />
   </component>
 </project>
