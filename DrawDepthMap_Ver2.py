@@ -80,8 +80,8 @@ while(True):
     right_gray = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
 
     # Threshold is 20, maximum binary value is 255.
-    left_thresh_binary = cv2.threshold(left_gray, 20, 255, cv2.THRESH_BINARY)[1]
-    right_thresh_binary = cv2.threshold(right_gray,20, 255, cv2.THRESH_BINARY)[1]
+    left_thresh_binary = cv2.threshold(left_gray, 60, 255, cv2.THRESH_BINARY)[1]
+    right_thresh_binary = cv2.threshold(right_gray,60, 255, cv2.THRESH_BINARY)[1]
 
     # remove boundary of image to prevent wrong detection
     left_thresh = 255 - left_thresh_binary
@@ -180,8 +180,8 @@ while(True):
     for cxl in cx_l:
         for cxr in cx_r:
             if cxr < 550 and cxl < 550:
-                if abs(cxr-cxl) < 50 and abs(cxr-cxl) > 0:
-                    distance = int(abs(float(360*120/(cxr-cxl))))
+                if abs(cxr-cxl) < 100 and abs(cxr-cxl) > 0:
+                    distance = int(abs(float(640*120/(cxr-cxl))))
 
                     distanceForMap.append(distance)
                     cxlForMap.append(cxl)
@@ -244,7 +244,7 @@ while(True):
             for distance in distanceForMap:
                 # check distance and location of obstacle
                 # if location of obstacle is similar to before, update.
-                if abs(obstacleDistance - distance) < 200:
+                if abs(obstacleDistance - distance) < 250:
                     if (tiltAngle - int(obstacleParameter[0]/320*100)) < 10:
                         obstacle[index][2] = distance
                         obstacleUpdate[index] = 1
@@ -285,7 +285,7 @@ while(True):
                 yDiscrepancy = abs(robot_y_saved - obstacle[countIndexForObstacleUpdate][1])
                 xDiscrepancySqua = xDiscrepancy * xDiscrepancy
                 yDiscrepancySqua = yDiscrepancy * yDiscrepancy
-                distance = int(math.sqrt(xDiscrepancySqua+yDiscrepancySqua)*1280/262)
+                distance = int(math.sqrt(xDiscrepancySqua+yDiscrepancySqua)*2560/262)
                 obstacle[countIndexForObstacleUpdate][2] = distance
                 obstacleUpdate[countIndexForObstacleUpdate] = 1
                 #check data values
