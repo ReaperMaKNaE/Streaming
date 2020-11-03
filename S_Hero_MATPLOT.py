@@ -1,10 +1,12 @@
-import matplotlib
+from matplotlib import pyplot as plt
 import cv2
 import numpy as np
 import urllib.request
 import math
 import time
 import serial
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
 
 #
 # 체크할 것 :
@@ -27,87 +29,108 @@ PI = 3.141592
 video = urllib.request.urlopen("http://192.168.137.193:8080/video_feed")
 total_bytes = b''
 
-obstacle = [] # save location of obstacles and distance from the robot in each frame
-numObstacle = 100 # Assume Maximum number of obstacles are 100
-robot = [320,480] # Save location of robot
+GoForward = 0
 addNewObstacle = 0
-obstacleUpdate = []
 frameNum = 0
-velocity = 0
-robot_x_saved = 0
-robot_y_saved = 0
-previous_robot_x = 0
-previous_robot_y = 0
-count = 0
-addNewObstacleAtMap = 0
-initialized = 0
 originRPY = [0, 0, 0]
 EulerAngle = [0, 0, 0]
-GoForward = 0
-GoDistance = 0
-CheckNonControl = 0
 AngleInBytes = [0, 0, 0]
-map_x_size, map_y_size = 800, 500
+initialized = 0
+numData = 0
 
-arduino = serial.Serial(
-    port = 'COM4', baudrate=9600,
-)
+angleVelX = []
+angleVelY = []
+angleVelZ = []
+angleAccX = []
+angleAccY = []
+angleAccZ = []
+x_plot = []
+
+#arduino = serial.Serial(
+#    port = 'COM4', baudrate=9600,
+#)
 
 while(True):
-    if GoForward == 0 :
-        print(' Enter How many do robot go forward in [meter] (maximum - 5m) : ')
-        print(' If you wanna end this, type 255. ')
-        GoDistance = int(input())
-        if GoDistance == 255 :
+    total_bytes += video.read(1024)
+    b = total_bytes.find(b'\xff\xd9') # JPEG END
+
+    if not b == -1:
+        numData += 1
+        a = total_bytes.find(b'\xff\xd8') # JPEG start
+        jpg = total_bytes[a:b+2] # actual image
+        total_bytes = total_bytes[b+2:] # other informations
+
+        #decode to colored image (another option is cv2.IMREAD_GRAYSCALE)
+        img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+        #left = img[241:480, 1:640, :]
+        #right = img[241:480, 641:1280, :]
+
+        angle_start = total_bytes.find(b'\x42\x4D\xF6\x04\x00\x00')
+        aX = int.from_bytes(total_bytes[angle_start+6:angle_start+9], "big")
+        aY = int.from_bytes(total_bytes[angle_start+9:angle_start+12], "big")
+        aZ = int.from_bytes(total_bytes[angle_start+12:angle_start+15], "big")
+        gX = int.from_bytes(total_bytes[angle_start+15:angle_start+18], "big")
+        gY = int.from_bytes(total_bytes[angle_start+18:angle_start+21], "big")
+        gZ = int.from_bytes(total_bytes[angle_start+21:angle_start+24], "big")
+        roll = int.from_bytes(total_bytes[angle_start+24:angle_start+26], "big")-512
+        pitch = int.from_bytes(total_bytes[angle_start+26:angle_start+28], "big")-512
+        yaw = int.from_bytes(total_bytes[angle_start+28:angle_start+30], "big")-512
+
+        accel = [aX/10000-10, aY/10000-10, aZ/10000-10]
+        gyro = [gX/10000-10, gY/10000-10, gZ/10000-10]
+
+        if numData > 100 :
+            angleVelX.pop(0)
+            angleVelX.append(gyro[0])
+
+            angleVelY.pop(0)
+            angleVelY.append(gyro[1])
+
+            angleVelZ.pop(0)
+            angleVelZ.append(gyro[2])
+
+            angleAccX.pop(0)
+            angleAccX.append(accel[0])
+
+            angleAccY.pop(0)
+            angleAccY.append(accel[1])
+
+            angleAccZ.pop(0)
+            angleAccZ.append(accel[2])
+        else :
+            x_plot.append(numData)
+            angleVelX.append(gyro[0])
+            angleVelY.append(gyro[1])
+            angleVelZ.append(gyro[2])
+            angleAccX.append(accel[0])
+            angleAccY.append(accel[1])
+            angleAccZ.append(accel[2])
+
+        cv2.imshow('img', img)
+        if cv2.waitKey(1)==27:
             break
-        print(' If you wanna move robot, type 210. For check non-control, type 230 ')
-        op = int(input())
-        if op == 210:
-            arduino.write(bytes(str(210), "ascii"))
-            GoForward = 1
-        elif op == 230:
-            arduino.write(bytes(str(210), "ascii"))
-            CheckNonControl = 1
 
-    elif CheckNonControl == 1:
-        print(' Check non - control. ')
-        time.sleep(5)
-        CheckNonControl = 0
-        arduino.write(bytes(str(0), "ascii"))
-        print(' Finish Check non - control. ')
+        if abs(roll) < 180 :
+            if abs(pitch) < 180 :
+                if abs(yaw) < 180 :
+                    AngleInBytes = [roll, pitch, yaw]
 
-    else :
-        total_bytes += video.read(1024)
-        b = total_bytes.find(b'\xff\xd9') # JPEG END
-
-        if not b == -1:
-            a = total_bytes.find(b'\xff\xd8') # JPEG start
-            jpg = total_bytes[a:b+2] # actual image
-            total_bytes = total_bytes[b+2:] # other informations
-
-            #decode to colored image (another option is cv2.IMREAD_GRAYSCALE)
-            img = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-            left = img[241:480, 1:640, :]
-            right = img[241:480, 641:1280, :]
-
-            angle_start = total_bytes.find(b'\x42\x4D\xF6\x04\x00\x00')
-            roll = int.from_bytes(total_bytes[angle_start+6:angle_start+8], "big")
-            pitch = int.from_bytes(total_bytes[angle_start+8:angle_start+10], "big")
-            yaw = int.from_bytes(total_bytes[angle_start+10:angle_start+12], "big")
-
-            if abs(roll) < 180 :
-                if abs(pitch) < 180 :
-                    if abs(yaw) < 180 :
-                        AngleInBytes = [roll-512, pitch-512, yaw-512]
-
-            if AngleInBytes[0] != 0  and initialized == 0:
+            if initialized == 0:
                 print('initializing... wait...')
-                print('AngleInBytes : ', AngleInBytes)
+                print('accel, gyro, AngleInBytes : ', accel, gyro, AngleInBytes)
+                plt.subplot(221)
+                plt.plot(x_plot, angleVelX, x_plot, angleVelY, x_plot, angleVelZ)
+                plt.subplot(222)
+                plt.plot(x_plot, angleAccX, x_plot, angleAccY, x_plot, angleAccZ)
+                plt.subplot(223)
+                plt.plot(roll)
+                plt.subplot(224)
+                plt.plot(pitch)
+                plt.show()
                 originRPY = AngleInBytes
-                time.sleep(1)
             else:
                 if cv2.waitKey(1)==27:
-                    arduino.write(bytes(str(0), "ascii"))
+                    #arduino.write(bytes(str(0), "ascii"))
                     break
 
 cv2.destroyAllWindows()

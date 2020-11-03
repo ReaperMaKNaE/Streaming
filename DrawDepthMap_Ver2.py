@@ -80,8 +80,8 @@ while(True):
     right_gray = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
 
     # Threshold is 20, maximum binary value is 255.
-    left_thresh_binary = cv2.threshold(left_gray, 60, 255, cv2.THRESH_BINARY)[1]
-    right_thresh_binary = cv2.threshold(right_gray,60, 255, cv2.THRESH_BINARY)[1]
+    left_thresh_binary = cv2.threshold(left_gray, 19, 255, cv2.THRESH_BINARY)[1]
+    right_thresh_binary = cv2.threshold(right_gray,19, 255, cv2.THRESH_BINARY)[1]
 
     # remove boundary of image to prevent wrong detection
     left_thresh = 255 - left_thresh_binary
