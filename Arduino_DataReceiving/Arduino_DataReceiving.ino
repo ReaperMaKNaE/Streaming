@@ -12,8 +12,7 @@ int servoPin = 12;
 SoftwareSerial bluetooth(2,3);
 
 void setup() {
-    Serial.begin(9600);
-    bluetooth.begin(9600);
+    bluetooth.begin(38400);
     // The pins which allow PWM is 5, 6, 9, 10, 11
     // 5, 6 -> motor
     // 9, 10 -> motor2
@@ -37,34 +36,30 @@ void loop() {
             servo.write(0);
         }
         else if(value == 210){
-            analogWrite(5, 0);
-            analogWrite(6, 100);
-            analogWrite(10, 0);
-            analogWrite(11, 100);
-            delay(500);
+            analogWrite(5, 200);
+            analogWrite(6, 0);
+            analogWrite(10, 200);
+            analogWrite(11, 0);
+            delay(1000);
             analogWrite(5, 0);
             analogWrite(6, 0);
             analogWrite(10, 0);
             analogWrite(11, 0);
-            delay(500);
+            delay(1000);
             for(i = 1; i<=5; i++){
-                analogWrite(5, 0);
-                analogWrite(6, 10*i);
-                analogWrite(10, 0);
-                analogWrite(11, 10*i);
+                analogWrite(5, 20*i);
+                analogWrite(6, 0);
+                analogWrite(10, 20*i);
+                analogWrite(11, 0);
                 delay(100);
             }
         }
         else {
             if(value > 90){
-                for(i = 90; i < value; i ++){
-                    servo.write(i)
-                }
+                servo.write(value);
             }
             else{
-                for(i = 90; i > value; i --){
-                    servo.write(i)
-                }
+                servo.write(value);
             }
         }
     }

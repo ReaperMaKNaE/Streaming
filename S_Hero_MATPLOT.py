@@ -2,9 +2,9 @@ from matplotlib import pyplot as plt
 import cv2
 import numpy as np
 import urllib.request
-import math
-import time
-import serial
+#import math
+#import time
+#import serial
 import warnings
 warnings.simplefilter("ignore", DeprecationWarning)
 
@@ -46,11 +46,17 @@ angleAccY = []
 angleAccZ = []
 x_plot = []
 
+AngleInBytesArr_roll = []
+AngleInBytesArr_pitch = []
+
 #arduino = serial.Serial(
-#    port = 'COM4', baudrate=9600,
+#    port = 'COM4', baudrate=38400,
 #)
 
+plt.ion()
 while(True):
+    accelValuePass = 1
+    gyroValuePass = 1
     total_bytes += video.read(1024)
     b = total_bytes.find(b'\xff\xd9') # JPEG END
 
@@ -79,32 +85,41 @@ while(True):
         accel = [aX/10000-10, aY/10000-10, aZ/10000-10]
         gyro = [gX/10000-10, gY/10000-10, gZ/10000-10]
 
-        if numData > 100 :
-            angleVelX.pop(0)
-            angleVelX.append(gyro[0])
+        for accelValue in accel:
+            if abs(accelValue) > 5:
+                accelValuePass = 0
 
-            angleVelY.pop(0)
-            angleVelY.append(gyro[1])
+        for gyroValue in gyro:
+            if abs(gyroValue) > 5:
+                gyroValuePass = 0
 
-            angleVelZ.pop(0)
-            angleVelZ.append(gyro[2])
+        if (accelValuePass + gyroValuePass) == 2:
+            if numData > 100 :
+                angleVelX.pop(0)
+                angleVelX.append(gyro[0])
 
-            angleAccX.pop(0)
-            angleAccX.append(accel[0])
+                angleVelY.pop(0)
+                angleVelY.append(gyro[1])
 
-            angleAccY.pop(0)
-            angleAccY.append(accel[1])
+                angleVelZ.pop(0)
+                angleVelZ.append(gyro[2])
 
-            angleAccZ.pop(0)
-            angleAccZ.append(accel[2])
-        else :
-            x_plot.append(numData)
-            angleVelX.append(gyro[0])
-            angleVelY.append(gyro[1])
-            angleVelZ.append(gyro[2])
-            angleAccX.append(accel[0])
-            angleAccY.append(accel[1])
-            angleAccZ.append(accel[2])
+                angleAccX.pop(0)
+                angleAccX.append(accel[0])
+
+                angleAccY.pop(0)
+                angleAccY.append(accel[1])
+
+                angleAccZ.pop(0)
+                angleAccZ.append(accel[2])
+            else :
+                x_plot.append(numData)
+                angleVelX.append(gyro[0])
+                angleVelY.append(gyro[1])
+                angleVelZ.append(gyro[2])
+                angleAccX.append(accel[0])
+                angleAccY.append(accel[1])
+                angleAccZ.append(accel[2])
 
         cv2.imshow('img', img)
         if cv2.waitKey(1)==27:
@@ -113,24 +128,45 @@ while(True):
         if abs(roll) < 180 :
             if abs(pitch) < 180 :
                 if abs(yaw) < 180 :
+                    if numData > 100:
+                        AngleInBytesArr_roll.pop(0)
+                        AngleInBytesArr_roll.append(roll)
+
+                        AngleInBytesArr_pitch.pop(0)
+                        AngleInBytesArr_pitch.append(pitch)
+                    else:
+                        AngleInBytesArr_roll.append(roll)
+                        AngleInBytesArr_pitch.append(pitch)
                     AngleInBytes = [roll, pitch, yaw]
 
             if initialized == 0:
                 print('initializing... wait...')
-                print('accel, gyro, AngleInBytes : ', accel, gyro, AngleInBytes)
+                #print('accel, gyro, AngleInBytes : ', accel, gyro, AngleInBytes)
+                print('Angle In Bytes : ', AngleInBytes)
+                plt.clf()
                 plt.subplot(221)
                 plt.plot(x_plot, angleVelX, x_plot, angleVelY, x_plot, angleVelZ)
+                plt.title('Gyro Value(Omega(rad/s))')
                 plt.subplot(222)
                 plt.plot(x_plot, angleAccX, x_plot, angleAccY, x_plot, angleAccZ)
+                plt.title('Accel Value(m/(10*s^2))')
                 plt.subplot(223)
-                plt.plot(roll)
+                plt.plot(AngleInBytesArr_roll)
+                plt.xlabel('Roll')
                 plt.subplot(224)
-                plt.plot(pitch)
-                plt.show()
+                plt.plot(AngleInBytesArr_pitch)
+                plt.xlabel('Pitch')
                 originRPY = AngleInBytes
+                plt.pause(0.001)
+                #if numData > 90:
+                    #arduino.write(bytes(str(int(roll)+90), "ascii"))
+                    #print('senddata : ', int(roll)+90)
+                    #time.sleep(0.3)
+
             else:
                 if cv2.waitKey(1)==27:
                     #arduino.write(bytes(str(0), "ascii"))
                     break
+        plt.show()
 
 cv2.destroyAllWindows()
